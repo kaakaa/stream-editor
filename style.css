@@ -54,4 +54,5 @@ input.edit-item {
     left: 0;
     right: 35%;
     bottom: 0;
+    overflow-y: scroll;
 }

@@ -3,10 +3,11 @@ import VideoController from './lib/controller.mjs';
 
 // Setup
 const logger = function (message) {
+    const old = document.getElementById('log').innerHTML;
     if (typeof message == 'object') {
-        document.getElementById('log').innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+        document.getElementById('log').innerHTML = (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />' + old;
     } else {
-        document.getElementById('log').innerHTML += message + '<br />';
+        document.getElementById('log').innerHTML = message + '<br />' + old;
     }
 }
 
