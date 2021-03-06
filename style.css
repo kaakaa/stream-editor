@@ -1,0 +1,57 @@
+.main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 35%;
+    bottom: 75%;
+}
+
+.video-player {
+    padding-top: 4vh;
+    padding-left: 2vw;
+}
+
+.video-sequence {
+    margin-top: 30px;
+    padding-left: 2vw;
+}
+
+.control {
+    padding: 10px;
+    background-color: #14213d;
+    color: #fca311;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 35%;
+    z-index: 1030;
+}
+
+.control-title {
+    margin-bottom: 40px;
+}
+
+.control-upload {
+    margin-left: 15px;
+}
+.control-edit {
+    margin-left: 15px;
+}
+input.edit-item {
+    color: #fca311;
+}
+.control-download {
+    margin-left: 15px;
+    margin-top: 30px;
+}
+
+#log {
+    border-top: 1px solid black;
+    padding: 7px;
+    position: fixed;
+    top: 75%;
+    left: 0;
+    right: 35%;
+    bottom: 0;
+}

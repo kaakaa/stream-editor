@@ -1,0 +1,120 @@
+<!DOCTYPE html5>
+<html>
+
+<head>
+    <title>Stream Editor</title>
+    <link href="//vjs.zencdn.net/7.8.2/video-js.min.css" rel="stylesheet">
+    <script src="//vjs.zencdn.net/7.8.2/video.min.js"></script>
+</head>
+
+<body>
+    <video id="video-player" class="video-js">
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">
+                supports HTML5 video
+            </a>
+        </p>
+    </video>
+    <div id="edit">
+        <div id="seekbar">
+            <label>
+                <span></span>
+                <input id="edit-seek-bar" type="range" min="0" max="100" value="0">
+            </label>
+            <label>
+                <input type="button" value="Clear Range" onclick="clearRange()">
+            </label>
+        </div>
+        <div id="debug">
+            <p>tets</p>
+            <span id="debug-box">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const clearRange = () => {
+            window.localStorage.setItem('edit-range', JSON.stringify([]));
+        }
+
+        // `ranges` is assumed to be sorted.
+        const sortAndMerge = (ranges) => {
+            if (ranges.length <= 1) { return ranges; }
+
+            ranges.sort((a, b) => {
+                if (a.start == b.start) {
+                    return a.end - b.end;
+                }
+                return a.start - b.start;
+            });
+
+            // Since merging could change the number of elements,
+            // create new array here for returing.
+            let merged = [ranges[0]];
+            let index = 1;
+            ranges.slice(1).forEach(r => {
+                if (merged[index - 1].end < r.start) {
+                    // Not overraped
+                    merged.push(r);
+                } else {
+                    merged[index - 1].end = Math.max(merged[index - 1].end, r.end)
+                }
+            });
+            return merged;
+        }
+    </script>
+    <script type="text/javascript">
+        const seekbar = document.getElementById("edit-seek-bar");
+        const debug = document.getElementById("debug-box");
+        let startTime;
+        let dragged = false;
+        seekbar.addEventListener("mousedown", (e) => {
+            dragged = true;
+        });
+        seekbar.addEventListener("input", (e) => {
+            if (dragged) {
+                dragged = false;
+                startTime = seekbar.value;
+            }
+        });
+        seekbar.addEventListener("mouseup", (e) => {
+            let obj = window.localStorage.getItem('edit-range');
+            const newRange = {
+                start: Math.min(startTime, seekbar.value),
+                end: Math.max(startTime, seekbar.value)
+            };
+            var ranges;
+            if (obj == null) {
+                ranges = [];
+                ranges.push(newRange);
+            } else {
+                ranges = JSON.parse(obj);
+                ranges.push(newRange);
+                ranges = sortAndMerge(ranges);
+            }
+            const rangesText = JSON.stringify(ranges)
+            debug.innerHTML = rangesText;
+            window.localStorage.setItem('edit-range', rangesText);
+        });
+    </script>
+    <script type="text/javascript">
+        window.HELP_IMPROVE_VIDEOJS = false;
+        var player = videojs('video-player', {
+            controls: true,
+            autoplay: false,
+            preload: 'auto'
+        });
+        player.src({ type: 'video/webm', src: "//vjs.zencdn.net/v/oceans.webm" });
+        player.poster("//vjs.zencdn.net/v/oceans.png");
+        player.ready(() => {
+            console.log("TODO: seek bar");
+        })
+        // click seek bar
+        // => player.currentTime(60);
+        // play video
+        // => seekbar.setCurrentPosition(player.currentTime() / player.duration());
+    </script>
+</body>
+
+</html>
